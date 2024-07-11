@@ -3,17 +3,45 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 class HelloJava {
-
+	
 	public static void main(String[] args) {
+        int k = 10;
+        String date = "2020-01-08";
+        String[] records = {
+                "2019-12-19 uid1 pid1",
+                "2019-12-22 uid1 pid2",
+                "2019-12-22 uid1 pid2",
+                "2019-12-22 uid1 pid4",
+                "2019-12-29 uid1 pid5",
+                "2019-12-30 uid2 pid5",
+                "2019-12-30 uid1 pid4",
+                "2019-12-30 uid1 pid4",
+                "2019-12-30 uid2 pid4",
+                "2019-12-30 uid1 pid5",
+                "2019-12-30 uid2 pid5",
+                "2020-01-02 uid1 pid5",
+                "2020-01-27 uid1 pid5",
+                "2019-01-27 uid2 pid5",
+        };
+
+        System.out.println("목표날짜:"+date);
+        System.out.println("K:"+k);
+        System.out.println("----데이터----");
+        for(String record: records) {
+        	System.out.println(record);
+        }
+        System.out.println("----------");
+        
+        String[] result = solution(records, date, k);
+        System.out.println("----결과----:");
+        for (String str : result) {
+            System.out.println(str);
+        }
+	}
+
+	public static String[] solution(String[] records,String date,int k) {
 		String tradeDate="",tradeUserId="",tradeProductId="";
-		int k=10;
-		String date="2020-01-05";
-	    String[] records = {
-	            "2019-12-24 uid1 pid1",
-	            "2019-12-27 uid2 pid2",
-	            "2020-01-04 uid3 pid3",
-	            "2020-01-04 uid3 pid3"
-	        };
+		
 	    List<DataEntry> allDataList = new ArrayList<>();
 	    
 	    for (String entry : records) {
@@ -25,13 +53,10 @@ class HelloJava {
 	        		tradeDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")), tradeUserId, tradeProductId);
 	        allDataList.add(dataEntry);
 	    }
-		for(DataEntry et : allDataList) {
-			System.out.println(et);
-		}
-	    
+
 	    LocalDate endDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 	    
-	    System.out.println("endDate : " + endDate);
+	    //System.out.println("endDate : " + endDate);
 
 	    int addMonth=0,addYear=0;
 		int day=endDate.getDayOfMonth();
@@ -47,36 +72,36 @@ class HelloJava {
 	    	day--;
 	    	
 	    }
-	    System.out.print(day+"일");
+	    //System.out.print(day+"일");
 	    int month=endDate.getMonthValue()+addMonth;
-	    System.out.print(month+"월");
+	    //System.out.print(month+"월");
 	    int year = endDate.getYear()+addYear;
-	    System.out.print(year+"년");
+	    //System.out.print(year+"년");
 	    
 	    String tempStartDate = Integer.toString(year)+Integer.toString(month)+Integer.toString(day); 
 	    
 	    LocalDate startDate = LocalDate.parse(tempStartDate, DateTimeFormatter.ofPattern("yyyyMMdd"));
 	    
-	    System.out.println("\nstartDate: "+startDate);
+	    //System.out.println("\nstartDate: "+startDate);
 	    
 	    List<DataEntry> dataList = new ArrayList<>();
 		List<String> productList = new ArrayList<>();
 	    Map<String, Integer> productMap = new HashMap<>();
+	    Map<String, Integer> userMap = new HashMap<>();
 	    
 		for(DataEntry et : allDataList) {
 	        if (et.getDate().isEqual(startDate) || et.getDate().isAfter(startDate)) {
 	        	if(et.getDate().isAfter(endDate)) {
 	        		continue;
 	        	}
-	            System.out.println("같은 날짜 혹은 N일 이내입니다.");
+	            //System.out.println("같은 날짜 혹은 N일 이내입니다.");
 	            dataList.add(et);
 	            
 	        } else {
-	            System.out.println("이전 날짜입니다.");
+	            //System.out.println("이전 날짜입니다.");
 	        } 
 	        
 		}
-		
 		
 		for(DataEntry et : dataList) {
 			if(productList.contains(et.getProductId())) {
@@ -86,79 +111,88 @@ class HelloJava {
 		}
 		
 		for(String s : productList) {
+			List<String> userList = new ArrayList<>();
+			List<String> userList2 = new ArrayList<>();
 			for(DataEntry et : dataList) {
-				if (productMap.containsKey(et.getProductId())) {
-	        		productMap.put(et.getProductId(), productMap.get(et.getProductId()) + 1);
-	        	} else {
-	        		productMap.put(et.getProductId(), 1);
+				if (s.equals(et.getProductId())) {
+					if(productMap.containsKey(s)) {
+						if(userList.contains(et.getUserId())) {
+							if(!userList2.contains(et.getUserId())) {
+								userList2.add(et.getUserId());
+							}
+						}
+						if(!userList.contains(et.getUserId())) {
+							productMap.put(s, productMap.get(s) + 1);
+						}
+		        		userList.add(et.getUserId());
+					}else {
+		        		productMap.put(s, 1);
+		        		userList.add(et.getUserId());
+					}
 	        	}
 			}
+			userMap.put(s, userList2.size());
 		}
 		
+		Map<String, Double> finalTable = new HashMap<>();
+		
+		for (Map.Entry<String, Integer> entry : productMap.entrySet()) {
+			int a =userMap.get(entry.getKey());
+			int b =entry.getValue();
+			
+			finalTable.put(entry.getKey() , (double)a/b );
+		}
 		
 
-        
-//        for (DataEntry et : dataList) {
-//        	if (userMap.containsKey(et.getProductId())) {
-//        		productMap.put(et.getProductId(), productMap.get(et.getProductId()) + 1);
-//        	} else {
-//        		productMap.put(et.getProductId(), 1);
-//        	}
-//      	}
- 
-    	
-//        Map<String, Integer> productMap = new HashMap<>();
-//        Set<DataEntry> productSet = new HashSet<>(dataList);
-        
-        
-//      if (countMap.containsKey(str)) {
-//      countMap.put(str, countMap.get(str) + 1);
-//  } else {
-//      countMap.put(str, 1);
-//  }
+		System.out.println("-----검사데이터----");
+		for(DataEntry et : dataList) {
+			System.out.println(et.getDate()+" uid"+et.getUserId()+" pid" + et.getProductId());
+		}
+		System.out.println("----------------");
 
-        
-        
-//        for (String str : uniqueSet) {
-//            System.out.println(str);
+//		for(String s : productList) {
+//			
+//			System.out.println("product List"+s+" ");
+//		}
+//
+//		System.out.println("------구매횟수------");
+//        for (Map.Entry<String, Integer> entry : productMap.entrySet()) {
+//            System.out.println("productMap 키: "+entry.getKey() + "값: " + entry.getValue());
 //        }
-//        
-//    	for(DataEntry et : dataList) {
-//    		if(countCustomer.containsKey(et.getProductId()))
-//    	}
-//    	
-//    	List<String> list = new ArrayList<>();
-//        list.add("a");
-//        list.add("a");
-//        list.add("a");
-//        list.add("a");
-//        list.add("b");
-//        list.add("c");
-//        list.add("c");
-//
-//        // 각 요소의 개수를 저장할 맵
-//        Map<String, Integer> countMap = new HashMap<>();
-//        Set<String> uniqueSet = new HashSet<>(list);
-//
-//        // 리스트를 순회하며 개수 세기
-//        for (String str : list) {
-//            if (countMap.containsKey(str)) {
-//                countMap.put(str, countMap.get(str) + 1);
-//            } else {
-//                countMap.put(str, 1);
-//            }
+//		System.out.println("------------------");
+//        for (Map.Entry<String, Integer> entry : userMap.entrySet()) {
+//            System.out.println("userMap 키: "+entry.getKey() + "값: " + entry.getValue());
 //        }
-//
-//        // 결과 출력
-        for (Map.Entry<String, Integer> entry : productMap.entrySet()) {
-            System.out.println(entry.getKey() + "의 개수: " + entry.getValue());
+//        for (Map.Entry<String, Double> entry : finalTable.entrySet()) {
+//            System.out.println("finalTable 키: "+entry.getKey() + "값: " + entry.getValue());
+//        }
+
+        List<Map.Entry<String, Double>> sortedFinalTable = new ArrayList<>(finalTable.entrySet());
+        sortedFinalTable.sort(Comparator
+        		.comparing(Map.Entry<String, Double>::getValue, Comparator.reverseOrder())
+                .thenComparing((entry1, entry2) -> 
+                productMap.get(entry2.getKey()).compareTo(productMap.get(entry1.getKey())))
+                .thenComparing(Map.Entry::getKey)
+        );
+
+		System.out.println("------재구매율(정렬)------");
+        // 정렬된 결과 출력
+        List<String> result = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : sortedFinalTable) {
+        	result.add("pid" + entry.getKey());
+            System.out.printf("pid"+entry.getKey());
+            System.out.printf(" %6.1f" , (float)(entry.getValue()*100));
+            System.out.println("% ,상품을 한 번 이상 구매한 고객 수: " + productMap.get(entry.getKey()));
         }
-//    	
-//    	
-//    	
-//	
-	}
+        if (result.isEmpty()) {
+            result.add("no result");
+        }
 
+        return result.toArray(new String[0]);
+        
+
+	}
+	
 }
 
 class DataEntry {
@@ -173,7 +207,6 @@ class DataEntry {
         this.productId = productId;
     }
 
-    // Getters and setters
     public LocalDate getDate() {
         return date;
     }
@@ -197,54 +230,5 @@ class DataEntry {
     public void setProductId(String productId) {
         this.productId = productId;
     }
-
-}
-
-
-class ProductEntry {
-    private String productId;
-    private int repeatCustomers;
-    private int totalCustomers;
-    private int purchaseCount;
-
-    public ProductEntry(String productId) {
-        this.productId = productId;
-    }
-
-    public void incrementRepeatCustomers() {
-        repeatCustomers++;
-    }
-
-    public void incrementTotalCustomers() {
-        totalCustomers++;
-    }
-
-    public void incrementPurchaseCount() {
-        purchaseCount++;
-    }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public int getRepeatCustomers() {
-        return repeatCustomers;
-    }
-
-    public int getTotalCustomers() {
-        return totalCustomers;
-    }
-
-    public int getPurchaseCount() {
-        return purchaseCount;
-    }
-
-    public double getRepurchaseRate() {
-        return totalCustomers == 0 ? 0 : (double) repeatCustomers / totalCustomers * 100;
-    }
-
-
-
-
 
 }

@@ -1,6 +1,7 @@
 package Day6;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -37,26 +38,25 @@ public class treeR_1167 {
 		
 		Queue<Integer> q = new LinkedList<>();
 		int distance[] = new int[N+1];
-		if(ar[1]!=null)
-			q.add(1);
-	
+        q.add(1);
+	    visited[1]=1;
 		while(!q.isEmpty()) {
 			int index =q.poll();
-			visited[index]=1;
 			for(Node i : ar[index]) { 
-				if(visited[i.index]==0 && i.index!=index) {
+				if(visited[i.index]==0) {
+			        visited[i.index]=1;
 					distance[i.index]=i.weight + distance[index];
 					q.add(i.index);
 					
 				}
 			}
 		}
+        
 		int max=0;
-		int max_i=0;
-		for(int i=1; i<=N; i++) {
-			if(distance[i]>max) {
+		int max_i=1;
+		for(int i=2; i<=N; i++) {
+			if(distance[i]>distance[max_i]) {
 				max_i = i;
-				max=distance[i];
 			}
 		}
 		
@@ -65,11 +65,13 @@ public class treeR_1167 {
 		distance = new int[N+1];
 		q = new LinkedList<>();
 		q.add(max_i);
+        visited[max_i]=1;
+        
 		while(!q.isEmpty()) {
 			int index =q.poll();
-			visited[index]=1;
 			for(Node i : ar[index]) { 
-				if(visited[i.index]==0 && i.index!=index) {
+				if(visited[i.index]==0) {
+			        visited[i.index]=1;
 					distance[i.index]=i.weight + distance[index];
 					q.add(i.index);
 					
@@ -78,16 +80,8 @@ public class treeR_1167 {
 		}
 		
 
-		max=0;
-		max_i=0;
-		for(int i=1; i<=N; i++) {
-			if(distance[i]>max) {
-				max_i = i;
-				max=distance[i];
-			}
-			
-		}
-		System.out.println(max);
+		Arrays.sort(distance);
+		System.out.println(distance[N]);
 
 	}
 	static class Node{

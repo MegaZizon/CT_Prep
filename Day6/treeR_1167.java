@@ -7,8 +7,8 @@ import java.util.Scanner;
 
 public class treeR_1167 {
 	
-	static ArrayList<Integer> ar[] ;
-	static boolean visited[] ;
+	static ArrayList<Node> ar[] ;
+	static int visited[] ;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -18,78 +18,85 @@ public class treeR_1167 {
 		int cnt = 0;
 		
 		ar = new ArrayList[N+1];
-		visited = new boolean[N+1];
+		visited = new int[N+1];
 		
 		for(int i=1; i<=N; i++) {
-			int j = 0;
-			int flag = 0;
+			
 			ar[i] = new ArrayList<>();
 			i = sc.nextInt();
 			while(true) {
-				j = sc.nextInt();
-				if(flag%2==0) {
-					if(j==-1) {
-						break;
-					}
-					cnt++;
-				}
-				ar[i].add(j);
-				
-				flag++;
-			}
-		}
-		
-		System.out.println(cnt/2+1);
-
-		int start_index;
-		int start_value;
-		int start_node;
-		
-		Queue<Integer> q = new LinkedList<Integer>();
-		
-//		for(int i=1; i<=N; i++) {
-//			if(ar[i].size()>=3) {
-//				q.add(ar[i].get(1));
-//				q.add(ar[i].get(2));
-//				break;
-//			}
-//		}
-		
-		q.add(3);
-		
-		while(!q.isEmpty()) {
-			int max[] = new int[N+1];
-			int index =q.poll();
-			int count=1;
-			
-			visited[index] = true;
-			for(int i : ar[index]) {
-				int depth;
-				count++;
-				if(i==-1) {
+				int j = sc.nextInt();
+				if(j==-1){
 					break;
 				}
-
-				System.out.println(i);
-				if(count%2==0) {
-					if(!visited[i]) {
-						visited[i]=true;
-						q.add(i);
-					}
-				}
-				else {
-					max[i-1] += i;
-				}
-				
+				int w = sc.nextInt();
+				ar[i].add(new Node(j,w));
 				
 			}
-			System.out.println(max[index]);
+		}
+		
+		Queue<Integer> q = new LinkedList<>();
+		int distance[] = new int[N+1];
+		if(ar[1]!=null)
+			q.add(1);
+	
+		while(!q.isEmpty()) {
+			int index =q.poll();
+			visited[index]=1;
+			for(Node i : ar[index]) { 
+				if(visited[i.index]==0 && i.index!=index) {
+					distance[i.index]=i.weight + distance[index];
+					q.add(i.index);
+					
+				}
+			}
+		}
+		int max=0;
+		int max_i=0;
+		for(int i=1; i<=N; i++) {
+			if(distance[i]>max) {
+				max_i = i;
+				max=distance[i];
+			}
+		}
+		
+		visited = new int[N+1];
+
+		distance = new int[N+1];
+		q = new LinkedList<>();
+		q.add(max_i);
+		while(!q.isEmpty()) {
+			int index =q.poll();
+			visited[index]=1;
+			for(Node i : ar[index]) { 
+				if(visited[i.index]==0 && i.index!=index) {
+					distance[i.index]=i.weight + distance[index];
+					q.add(i.index);
+					
+				}
+			}
+		}
+		
+
+		max=0;
+		max_i=0;
+		for(int i=1; i<=N; i++) {
+			if(distance[i]>max) {
+				max_i = i;
+				max=distance[i];
+			}
 			
 		}
+		System.out.println(max);
 
-		
-		
-		
+	}
+	static class Node{
+		int weight;
+		int index;
+		Node(int i,int w){
+			this.index=i;
+			this.weight=w;
+		}
 	}
 
 }

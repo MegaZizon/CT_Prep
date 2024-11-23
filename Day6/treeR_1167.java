@@ -22,16 +22,19 @@ public class treeR_1167 {
 		visited = new int[N+1];
 		
 		for(int i=1; i<=N; i++) {
+			ar[i]=new ArrayList<>();
+		}
+		
+		for(int i=1; i<=N; i++) {
 			
-			ar[i] = new ArrayList<>();
-			i = sc.nextInt();
+			int s = sc.nextInt();
 			while(true) {
 				int j = sc.nextInt();
 				if(j==-1){
 					break;
 				}
 				int w = sc.nextInt();
-				ar[i].add(new Node(j,w));
+				ar[s].add(new Node(j,w));
 				
 			}
 		}
@@ -52,7 +55,6 @@ public class treeR_1167 {
 			}
 		}
         
-		int max=0;
 		int max_i=1;
 		for(int i=2; i<=N; i++) {
 			if(distance[i]>distance[max_i]) {

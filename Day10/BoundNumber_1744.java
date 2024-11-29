@@ -28,7 +28,7 @@ public class BoundNumber_1744 {
 		}
 		
 		int count = 0 ;
-		while(count!=2 && !arr.isEmpty()) {
+		while(!arr.isEmpty()) {
 			int value = arr.poll();
 			if(value>0) {
 				if(value==1) {

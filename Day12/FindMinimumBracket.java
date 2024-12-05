@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-public class FindMinimumBracket {
+public class FindMinimumBracket { //괄호를 한번만 쓰는 경우로 잘못 이해함
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		/*
 		Scanner sc = new Scanner(System.in);
 		String input = sc.next();
 		String pl = "\\+";
@@ -96,7 +96,29 @@ public class FindMinimumBracket {
 		}
 		
 		
-		System.out.println(nomal);
+		System.out.println(nomal);*/
+		int answer = 0;
+		Scanner sc = new Scanner(System.in);
+		String ex = sc.nextLine();
+		String[] str = ex.split("-");
+		for(int i=0; i<str.length; i++) {
+			int temp = mySum(str[i]);
+			if(i==0) {
+				answer = answer + temp;
+			}else {
+				answer = answer - temp;
+			}
+		}
+		System.out.println(answer);
+		
+	}
+	static int mySum(String a) {
+		int sum=0;
+		String temp[] = a.split("[+]");
+		for(int i=0; i<temp.length; i++) {
+			sum+= Integer.parseInt(temp[i]);
+		}
+		return sum;
 	}
 
 }

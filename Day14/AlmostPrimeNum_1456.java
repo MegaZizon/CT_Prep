@@ -11,9 +11,9 @@ public class AlmostPrimeNum_1456{
 		int M = (int)Math.sqrt(MM);
 		int N = (int)Math.sqrt(NN);
 		
-		int arr[];
+		long arr[];
 		
-		arr = new int[(int)(N+1)];
+		arr = new long[(int)(N+1)];
 		
 		
 		
@@ -42,14 +42,15 @@ public class AlmostPrimeNum_1456{
 		for(int i=2; i<=N; i++) {
 			if(arr[i]!=-1) {
 				long sum = i;
-				do {
-					sum*=i;
-					if(sum<=NN && sum>=MM) {
+				
+				while((double)i<=(double)NN/sum) {
+					if((double)i>=(double)MM/sum) {
 						count++;
-//						System.out.print(sum+" ");
 					}
+					
+					sum*=i;
+					
 				}
-				while(sum<=NN);
 			}
 		}
 		

@@ -25,14 +25,10 @@ public class PrimeNotSqrt_1016 {
 		}
 		long count = 0 ;
 		for(int i=2; i<=N; i++) {
-			if(arr[i]==i) {
-				long temp = i;
-				while((double)i<=(double)NN/temp) {
-					if((double)i>=(double)MM/temp) {
-						count++;
-					}
-					temp*=i;
-				}
+			long temp = i;
+			if(i<=(double)NN/i && i>=(double)MM/i) {
+				count++;
+				System.out.print(i*i+" ");
 			}
 		}
 		

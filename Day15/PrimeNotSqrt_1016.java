@@ -9,30 +9,30 @@ public class PrimeNotSqrt_1016 {
 		Scanner sc = new Scanner(System.in);
 		long MM = sc.nextLong();
 		long NN = sc.nextLong();
-		int N = (int)Math.sqrt(NN);
-		int arr[]=new int[N+1];
+		boolean arr[]=new boolean[(int)(NN-MM+1)];
 		
-		for(int i=0; i<=N; i++) {
-			arr[i]=i;
-		}
-		
-		for(int i=2; i<=N; i++) {
-			if(arr[i]==i) {
-				for(int j=i+i; j<=N; j+=i) {
-					arr[j]=0;
-				}
+		for(long i=2; i*i<=NN; i++) {
+			
+			long pow = i*i;
+			long start;
+			if(MM%pow==0) {
+				start = MM;
+			}else {
+				start = MM+pow-(MM%pow);
 			}
+			for(long j=start; j<=NN; j+=pow) {
+				arr[(int)(j-MM)] = true;
+			}
+			
 		}
-		long count = 0 ;
-		for(int i=2; i<=N; i++) {
-			long temp = i;
-			if(i<=(double)NN/i && i>=(double)MM/i) {
+		
+		long count=0;
+		for(long i=0; i<=NN-MM; i++) {
+			if(!arr[(int)i]) {
 				count++;
-				System.out.print(i*i+" ");
 			}
 		}
-		
-		System.out.println(NN-count);
+		System.out.println(count);
 		
 	}
 
